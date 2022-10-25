@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="layout/fragments :: html_head"></head>
+    <link href="/css/signin.css" rel="stylesheet">
+    <title>회원가입 페이지</title>
+</head>
+<body class="text-center">
+
+<main class="form-signin w-100 m-auto">
+    <form name="registerForm">
+
+        <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+        <div class="form-floating">
+            <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email">
+            <label for="email">Email address</label>
+            <button class="w-100 btn btn-lg btn-primary" type="button" onclick="emailCheck()">이메일 중복체크</button>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+            <label for="password">Password</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password2" placeholder="Password" name="password2">
+            <label for="password2">Re-enter password</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="nickname" placeholder="Nickname" name="nickname">
+            <label for="nickname">nick name</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="button" onclick="checkAll()" id="submit" disabled="disabled" >Sign up</button>
+        <p class="mt-5 mb-3 text-muted">&copy; sohyun2022</p>
+    </form>
+    <a class="btn btn-sm btn-outline-secondary" th:href="@{/}">홈페이지로 가기</a>
+    <a class="btn btn-sm btn-outline-secondary" th:href="@{/member/login}">로그인 하기</a>
+</main>
+</body>
+<script src="/js/user/registerUser.js"> </script>
+<script src="/js/user/checkEmailDuplicate.js"> </script>
+</html>

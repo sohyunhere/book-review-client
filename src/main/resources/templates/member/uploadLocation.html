@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <head th:include="layout/fragments :: html_head"/>
+    <link rel="stylesheet" href="/css/main.css">
+    <title>나의 업로드 위치</title>
+</head>
+<body>
+<div class="container">
+    <div th:replace="layout/fragments :: header"></div>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div th:replace="layout/myPageFragment :: mypageSidebar"></div>
+            <main class="col-9 py-md-3 pl-md-5 bd-content">
+                <div class="bd-intro pt-2 ps-lg-2">
+                    <button class="btn btn-outline-primary rounded-pill" type="button" th:id="uploadLocation" onclick="uploadLocation()">위치</button>
+                    <button class="btn btn-outline-secondary rounded-pill" type="button" th:id="uploadSpace" onclick="uploadSpace()">공간</button>
+                    <div id="map" style="width:900px;height:500px;"></div>
+                    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ee54b3d25775e7b45670791750227b&libraries=clusterer"></script>
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                        let posts = [[${posts}]];
+                        console.log(posts);
+                        let container = document.getElementById('map');
+                        let options = {
+                            center: new kakao.maps.LatLng(posts[0].location.lat, posts[0].location.lng),
+                            level: 6
+                        };
+
+                        let map = new kakao.maps.Map(container, options);
+
+                        // 마커 클러스터러를 생성합니다
+                        let clusterer = new kakao.maps.MarkerClusterer({
+                            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+                            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+                            minLevel: 2 // 클러스터 할 최소 지도 레벨
+                        });
+                        let markers;
+                        let polygon;
+                        let circle;
+                        /*]]>*/
+
+                        function uploadLocation(){
+                            $("#uploadLocation").attr("disabled", "disabled");
+                            $("#uploadLocation").addClass("btn-primary");
+                            $("#uploadLocation").removeClass("btn-outline-primary");
+                            $("#uploadSpace").removeAttr("disabled");
+                            $("#uploadSpace").removeClass("btn-secondary");
+                            $("#uploadSpace").addClass("btn-outline-secondary");
+                            let positions = new Array();
+                            markers = new Array();
+                            posts.forEach(function (post){
+                                let p = new Object();
+                                p.title = post.postTitle;
+                                p.latlng = new kakao.maps.LatLng(post.location.lat, post.location.lng)
+
+                                positions.push(p);
+                            });
+
+                            console.log(positions);
+                            let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+
+                            for (let i = 0; i < positions.length; i ++) {
+
+                                // 마커 이미지의 이미지 크기 입니다
+                                let imageSize = new kakao.maps.Size(24, 35);
+
+                                // 마커 이미지를 생성합니다
+                                let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                                // 마커를 생성합니다
+                                let marker = new kakao.maps.Marker({
+                                    map: map, // 마커를 표시할 지도
+                                    position: positions[i].latlng, // 마커를 표시할 위치
+                                    title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                                    image : markerImage // 마커 이미지
+                                });
+                                markers.push(marker);
+                            }
+
+                            // 클러스터러에 마커들을 추가합니다
+                            clusterer.addMarkers(markers);
+
+                            if(posts.length > 2) {
+                                polygon.setMap(null);
+                            }else if(posts.length == 2){
+                                circle.setMap(null);
+                            }else{
+                                circle.setMap(null);
+                            }
+
+                        }
+                        function uploadSpace(){
+                            $("#uploadSpace").attr("disabled", "disabled");
+                            $("#uploadSpace").addClass("btn-secondary");
+                            $("#uploadSpace").removeClass("btn-outline-secondary");
+                            $("#uploadLocation").removeAttr("disabled");
+                            $("#uploadLocation").removeClass("btn-primary");
+                            $("#uploadLocation").addClass("btn-outline-primary");
+
+                            if(posts.length > 2){
+                                let polygonPath = new Array();
+                                posts.forEach(function (post){
+                                    let p = new kakao.maps.LatLng(post.location.lat, post.location.lng)
+
+                                    polygonPath.push(p);
+                                });
+
+                                console.log(polygonPath);
+
+                                // 지도에 표시할 다각형을 생성합니다
+                                polygon = new kakao.maps.Polygon({
+                                    path:polygonPath, // 그려질 다각형의 좌표 배열입니다
+                                    strokeWeight: 3, // 선의 두께입니다
+                                    strokeColor: '#39DE2A', // 선의 색깔입니다
+                                    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                                    strokeStyle: 'longdash', // 선의 스타일입니다
+                                    fillColor: '#A2FF99', // 채우기 색깔입니다
+                                    fillOpacity: 0.7 // 채우기 불투명도 입니다
+                                });
+
+                                // 지도에 다각형을 표시합니다
+                                polygon.setMap(map);
+                                for(let i = 0; i < markers.length; i++){
+                                    markers[i].setMap(null);
+                                };
+                            }else if(posts.length == 2){
+                                //위치 2개인 경우
+                                let midLat = (posts[0].location.lat + posts[1].location.lat)/2;
+                                let midLng = (posts[0].location.lng + posts[1].location.lng)/2;
+
+                                let polyLine = new kakao.maps.Polyline({
+                                    path: [
+                                        new kakao.maps.LatLng(posts[0].location.lat,  posts[0].location.lng),
+                                        new kakao.maps.LatLng(posts[1].location.lat,  posts[1].location.lng)
+                                        ], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+                                    strokeWeight: 3, // 선의 두께입니다
+                                    strokeColor: '#db4040', // 선의 색깔입니다
+                                    strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+                                    strokeStyle: 'solid' // 선의 스타일입니다
+                                });
+
+                                let radius = polyLine.getLength()/2;
+                                circle = new kakao.maps.Circle({
+                                    center : new kakao.maps.LatLng(midLat,  midLng),  // 원의 중심좌표 입니다
+                                    radius: radius, // 미터 단위의 원의 반지름입니다
+                                    strokeWeight: 4, // 선의 두께입니다
+                                    strokeColor: '#FFAE00', // 선의 색깔입니다
+                                    strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                                    strokeStyle: 'dashed', // 선의 스타일 입니다
+                                    fillColor: '#eddcb7', // 채우기 색깔입니다
+                                    fillOpacity: 0.7  // 채우기 불투명도 입니다
+                                });
+
+                                // 지도에 원을 표시합니다
+                                circle.setMap(map);
+
+                                markers[0].setMap(null);
+                                markers[1].setMap(null);
+
+                            }else {
+                                //위치 1개인 경우
+                                circle = new kakao.maps.Circle({
+                                    center : new kakao.maps.LatLng(posts[0].location.lat,  posts[0].location.lng),  // 원의 중심좌표 입니다
+                                    radius: 100, // 미터 단위의 원의 반지름입니다
+                                    strokeWeight: 5, // 선의 두께입니다
+                                    strokeColor: '#75B8FA', // 선의 색깔입니다
+                                    strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                                    strokeStyle: 'dashed', // 선의 스타일 입니다
+                                    fillColor: '#CFE7FF', // 채우기 색깔입니다
+                                    fillOpacity: 0.7  // 채우기 불투명도 입니다
+                                });
+                                // 지도에 원을 표시합니다
+                                circle.setMap(map);
+                                markers[0].setMap(null);
+                            }
+                            clusterer.removeMarkers( markers );
+                        }
+                    </script>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+<div th:replace="layout/fragments :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+    <div th:fragment="mypageSidebar" class="col-3 bd-sidebar">
+        <a href="/member/mypage" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+            <span class="fs-4">My page</span>
+        </a>
+        <hr>
+        <ul class="list-unstyled fw-normal pb-2 small">
+            <li class="nav-item">
+                <a href="/board/mypost" class="nav-link active" aria-current="page">
+                    작성한 게시글
+                </a>
+            </li>
+            <li>
+                <a href="/board/myComment" class="nav-link link-dark">
+                    작성한 댓글
+                </a>
+            </li>
+            <li>
+                <a href="/board/myUploadLocation" class="nav-link link-dark">
+                    나의 업로드 위치/공간
+                </a>
+            </li>
+            <li>
+                <a href="/board/chart" class="nav-link link-dark">
+                    게시판 통계
+                </a>
+            </li>
+        </ul>
+        <hr>
+    </div>
+</body>
+</html>

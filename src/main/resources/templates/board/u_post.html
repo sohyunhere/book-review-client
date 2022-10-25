@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:include="layout/fragments :: html_head"></head>
+    <link rel="stylesheet" href="/css/main.css">
+    <title>게시글 수정 페이지</title>
+</head>
+<body>
+<div class="container">
+    <div th:replace="layout/fragments :: header"></div>
+    <form class="p-4" name="updatePostForm">
+        <input type="hidden" id="postId" name="postId" th:value="${post.postId}">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="postTitle" class="form-label">글 제목</label>
+                    <input type="text" class="form-control" id="postTitle" name="postTitle" placeholder="제목" th:value="${post.postTitle}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="readDate" class="form-label">읽은 날짜</label>
+                    <input type="date" class="form-control" id="readDate" name="readDate" placeholder="" th:value="${#dates.format(post.readBookDate, 'yyy-MM-dd')}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="bookTitle" class="form-label">도서 이름</label>
+                    <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder="책 제목" th:value="${post.bookTitle}" readonly>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="author" class="form-label">지은이</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="지은이" th:value="${post.author}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="publisher" class="form-label">출판사</label>
+                    <input type="text" class="form-control" id="publisher" name="publisher" placeholder="출판사" th:value="${post.publisher}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">카테고리</label>
+                    <input type="text" class="form-control" id="category" name="category" th:value="${post.category.categoryName}" readonly>
+                    <input type="hidden" id="categoryId" name="categoryId" th:value="${post.category.categoryId}">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div id="editor" name="editor"></div>
+            <input type="hidden" id="content" name="content" th:value="${post.content}">
+        </div>
+
+        <div th:if="${post.getAttachedFile() != null}">
+            <div class="mb-3">
+                <div id="f">
+                    <label for="file" class="form-label">첨부파일 : </label>
+                    <span th:text="${post.getAttachedFile().getName()}"></span>
+                    <a href="javascript:void(0)" th:onclick="'deletefile('+${post.getAttachedFile().fileId}+')'" id="file" >삭제</a>
+                </div>
+                <div id="ff" style="display: none">
+                    <input class="form-control" id="formFile2" name="formFile2" type="file">
+                </div>
+
+            </div>
+        </div>
+        <div class="mb-3"th:if="${post.getAttachedFile() == null}">
+            <label for="formFile" class="form-label">첨부파일</label>
+            <input class="form-control" type="file" id="formFile" name="formFile">
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center">
+            <button class="w-100 btn btn-lg btn-primary" type="button" onclick="checkAll()">글 수정</button>
+        </div>
+    </form>
+</div>
+<div th:replace="layout/fragments :: footer"></div>
+</body>
+<script src="/js/board/updatePost.js"> </script>
+<script src="/js/board/uploadFile.js"></script>
+
+</html>

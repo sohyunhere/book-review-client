@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+  <head th:include="layout/fragments :: html_head"/>
+  <link rel="stylesheet" href="/css/main.css">
+  <title>내가 작성한 게시글</title>
+</head>
+<body>
+<div class="container">
+  <div th:replace="layout/fragments :: header"></div>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+          <div th:replace="layout/myPageFragment :: mypageSidebar"></div>
+
+          <main class="col-9 py-md-3 pl-md-5 bd-content">
+            <div class="bd-intro pt-2 ps-lg-2">
+              <div th:replace="layout/PostFragment :: postList"></div>
+            </div>
+          </main>
+        </div>
+  </div>
+</div>
+<div th:replace="layout/fragments :: footer"></div>
+</body>
+<script src="/js/myPage/myPosts.js"></script>
+</html>

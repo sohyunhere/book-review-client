@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <head th:include="layout/fragments :: html_head"></head>
+    <link rel="stylesheet" href="/css/main.css">
+    <title>글쓰기 페이지</title>
+</head>
+<body>
+<div class="container">
+    <div th:replace="layout/fragments :: header"></div>
+
+    <form class="p-4" name="writePostForm" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="postTitle" class="form-label">글 제목</label>
+                    <input type="text" class="form-control" id="postTitle" name="postTitle" placeholder="제목">
+                </div>
+                <div class="mb-3">
+                    <label for="readDate" class="form-label">읽은 날짜</label>
+                    <input type="date" class="form-control" id="readDate" name="readDate" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="bookTitle" class="form-label">도서 이름</label>
+                    <input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder="책 제목">
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label for="author" class="form-label">지은이</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="지은이">
+                </div>
+                <div class="mb-3">
+                    <label for="publisher" class="form-label">출판사</label>
+                    <input type="text" class="form-control" id="publisher" name="publisher" placeholder="출판사">
+                </div>
+                <div class="mb-3">
+                    <label for="categoryId" class="form-label">카테고리</label>
+                    <select class="form-select" aria-label="Default select example" id="categoryId" name="categoryId">
+                        <option value="" selected>카테고리</option>
+                        <option th:each="cate : ${categories}" th:value="${cate?.getCategoryId()}" th:utext="${cate?.getCategoryName()}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div id="editor" name="editor"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="formFile" class="form-label">첨부파일</label>
+            <input class="form-control" type="file" id="formFile" name="formFile">
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center">
+            <button class="w-100 btn btn-lg btn-primary" type="button" onclick="checkAll()">글 작성</button>
+        </div>
+    </form>
+</div>
+<div th:replace="layout/fragments :: footer"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+<script src="/js/board/writePost.js"> </script>
+<script src="/js/board/uploadFile.js"></script>
+</html>

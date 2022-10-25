@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+</head>
+<body>
+    <div class = "container" th:fragment="postList">
+
+        <div id="grid"></div>
+        <script>
+                // GRID 를 생성한다.
+                tui.Grid.applyTheme('striped',{
+                    cell: {
+                        header : {
+                            background: "#eaeaea",
+                            border: "#e0e0e0",
+                            showHorizontalBorder: true,
+                        },
+                        rowHeader : {
+                            background: "#eaeaea",
+                            border: "#e0e0e0",
+                            showHorizontalBorder: true,
+                        }
+                    }
+                });
+                let grid = new tui.Grid( {
+                    el: document.getElementById('grid'),
+                    scrollX : false,
+                    scrollY : false,
+                    rowHeaders: ["rowNum"],
+                    pageOptions : {
+                        perPage: 10,
+                        useClient: true
+                    },
+                    columns: [
+                        {
+                            header: '게시글번호',
+                            name: 'no'
+                        },
+                        {
+                            header: '제목',
+                            name: 'title'
+                        },
+                        {
+                            header: '글쓴이',
+                            name: 'name'
+                        },
+                        {
+                            header: '등록일',
+                            name: 'date'
+                        },
+                        {
+                            header: '조회수',
+                            name: 'view'
+                        }
+                    ]
+                } );
+
+                function setGridData(list){
+                    // GRID 에 데이터를 입력한다.
+                    let arrData = [];
+                    for(let i = 0; i < list.length; i++) {
+                        let postV = {}
+                        postV.no = list[i].postId;
+                        postV.title = list[i].postTitle;
+                        postV.name = list[i].member.memberNickname;
+                        postV.date = formatDate(list[i].writtenDate);
+
+                        postV.view = list[i].viewCount;
+                        arrData.push(postV);
+                    }
+                    grid.resetData(arrData);
+                }
+                grid.hideColumn('no');
+                grid.on('click', ev => {
+                    let rowNum = ev.rowKey;
+                    let row = ev.instance.getRow(rowNum);
+                    console.log('check!', ev);
+                    location.href = '/board/'+row.no;
+                });
+
+                function setPerPage(count){
+                    grid.setPerPage(count);
+                }
+                function formatDate(date){
+                    let utc = new Date(date);
+                    let formated= "";
+                    let month = utc.getMonth()+1;
+                    formated += utc.getFullYear() +"-"+ month+"-"+utc.getDate() + " ";
+                    let split = utc.toString().split(' ');
+                    formated += split[4];
+
+                    return formated;
+                }
+        </script>
+    </div>
+</body>
+</html>

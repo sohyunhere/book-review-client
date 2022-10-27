@@ -38,3 +38,5 @@ out/
 .vscode/
 /src/main/resources/static/editorUpload/
 
+gradle-wrapper.jar
+gradle-wrapper.properties

@@ -63,6 +63,7 @@ public class Member implements UserDetails, Serializable{
         this.role = role;
     }
 
+    @JsonIgnore
     @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

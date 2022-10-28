@@ -1,4 +1,4 @@
-package com.example.bookreviewclient.test.controller;
+package com.example.bookreviewclient.controller;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

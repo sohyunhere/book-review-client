@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -18,6 +19,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class MemberService implements UserDetailsService {
     @Autowired
     private WebClient webClient;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override// 기본적인 반환 타입은 UserDetails, UserDetails를 상속받은 MemberInfo로 반환 타입 지정 (자동으로 다운 캐스팅됨)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,5 +43,13 @@ public class MemberService implements UserDetailsService {
         Authentication newAuth = token;
         SecurityContextHolder.getContext().setAuthentication(newAuth);
         return;
+    }
+
+    public boolean comparePassword(String originPW, Member member){
+        if(passwordEncoder.matches(originPW, member.getMemberPassword())){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

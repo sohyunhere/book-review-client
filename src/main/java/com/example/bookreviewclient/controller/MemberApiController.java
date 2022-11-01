@@ -94,16 +94,44 @@ public class MemberApiController {
     }
 
     //비밀번호 수정하기
-//    @PostMapping("/member/mypage/password")
-//    public int changePassword(@RequestParam("originPassword") String originPW, @RequestParam("newPassword") String newPW, Authentication auth) {
-//        try{
-//            Member changedUser = memberService.changePassword((Member) auth.getPrincipal(), originPW, newPW);
-//            memberService.changeSession(changedUser);
-//        }catch (Exception e){
-//            //에러발생 현재 비밀번호가 일치하지 않을 떄
-//            return 0;
-//        }
-//        return 1;
-//    }
+    @PostMapping("/member/mypage/password")
+    public int changePassword(@RequestParam("originPassword") String originPW, @RequestParam("newPassword") String newPW, Authentication auth) {
+        try{
+            Member user = (Member) auth.getPrincipal();
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("email", user.getMemberEmail());
+            map.put("newPW", passwordEncoder.encode(newPW));
+
+            boolean compare = memberService.comparePassword(originPW, user);
+            if(compare == false){
+                return 0;
+            }
+
+            webClient.post()
+                    .uri("/member/mypage/password")
+                    .bodyValue(map)
+                    .retrieve()
+                    .bodyToMono(Integer.class)
+                    .flux()
+                    .toStream()
+                    .findFirst().orElse(null);
+
+            Member changedUser = webClient.post()
+                    .uri("/member/findByMemberEmail")
+                    .bodyValue(user.getMemberEmail())
+                    .retrieve()
+                    .bodyToMono(Member.class)
+                    .flux()
+                    .toStream()
+                    .findFirst().orElse(null);
+
+            memberService.changeSession(changedUser);
+        }catch (Exception e){
+            //에러발생 현재 비밀번호가 일치하지 않을 떄
+            return 0;
+        }
+        return 1;
+    }
 
 }

@@ -12,14 +12,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class CommentController
-{
+public class CommentController {
     @Autowired
     private WebClient webClient;
 
     //댓글 작성
     @PostMapping("/comment/write")
-    public int write(@RequestBody CommentsDto dto, Authentication auth){
+    public int write(@RequestBody CommentsDto dto, Authentication auth) {
         Member member = (Member) auth.getPrincipal();
         dto.setMember(member);
 
@@ -37,7 +36,7 @@ public class CommentController
 
     //댓글 삭제
     @GetMapping("/board/delete/comment/{commentId}")
-    public int deleteComment(@PathVariable("commentId") Long id){
+    public int deleteComment(@PathVariable("commentId") Long id) {
         int commentId = webClient.get()
                 .uri("/board/delete/comment/{commentId}", id)
                 .retrieve()
@@ -51,7 +50,7 @@ public class CommentController
     //댓글 수정
     @PostMapping("/board/update/comment/{commentId}")
     public int updateComment(@PathVariable("commentId") Long id,
-                             @RequestParam(value="content") String content){
+                             @RequestParam(value = "content") String content) {
         int commentId = webClient.post()
                 .uri("/board/update/comment/{commentId}", id)
                 .bodyValue(content)

@@ -28,7 +28,7 @@ public class CategoryController {
 
     //카테고리별 페이지로 이동
     @GetMapping("/category/{categoryId}")
-    public String postListByCategory(@PathVariable("categoryId") Long id, Model model){
+    public String postListByCategory(@PathVariable("categoryId") Long id, Model model) {
 
         List<Category> categories = webClient.get()
                 .uri("/")
@@ -42,6 +42,7 @@ public class CategoryController {
 
         return "board/c_postList";
     }
+
     //카테고리 게시글
     @ResponseBody
     @PostMapping("/category/post/{categoryId}")

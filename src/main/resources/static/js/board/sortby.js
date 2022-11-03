@@ -1,41 +1,42 @@
-function sortByLatest(){
+function sortByLatest() {
     // ajax 통신
     let header = $("meta[name='_csrf_header']").attr('content');
     let token = $("meta[name='_csrf']").attr('content');
     $.ajax({
         async: true,
-        type : "get",
+        type: "get",
         contentType: "application/json",
-        url : "/latest",
-        beforeSend: function(xhr){
+        url: "/latest",
+        beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
         },
         success:
             function (data) {
-               $("#latest").attr("disabled", "disabled");
-               $("#latest").addClass("btn-primary");
-               $("#latest").removeClass("btn-outline-primary");
-               $("#view").removeAttr("disabled");
-               $("#view").removeClass("btn-secondary");
-               $("#view").addClass("btn-outline-secondary");
+                $("#latest").attr("disabled", "disabled");
+                $("#latest").addClass("btn-primary");
+                $("#latest").removeClass("btn-outline-primary");
+                $("#view").removeAttr("disabled");
+                $("#view").removeClass("btn-secondary");
+                $("#view").addClass("btn-outline-secondary");
                 setGridData(data.posts);
             },
-        error :
-            function (request, status, error){
-                alert("실패"+ "code:"+request.status+"\n"+" message : " + request.responseText +"\n"+"error:"+error);
+        error:
+            function (request, status, error) {
+                alert("실패" + "code:" + request.status + "\n" + " message : " + request.responseText + "\n" + "error:" + error);
             }
     });
 }
-function sortByView(){
+
+function sortByView() {
     // ajax 통신
     let header = $("meta[name='_csrf_header']").attr('content');
     let token = $("meta[name='_csrf']").attr('content');
     $.ajax({
         async: true,
-        type : "get",
+        type: "get",
         contentType: "application/json",
-        url : "/popular",
-        beforeSend: function(xhr){
+        url: "/popular",
+        beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token);
         },
         success:
@@ -48,9 +49,9 @@ function sortByView(){
                 $("#view").removeClass("btn-outline-secondary");
                 setGridData(data.posts);
             },
-        error :
-            function (request, status, error){
-                alert("실패"+ "code:"+request.status+"\n"+" message : " + request.responseText +"\n"+"error:"+error);
+        error:
+            function (request, status, error) {
+                alert("실패" + "code:" + request.status + "\n" + " message : " + request.responseText + "\n" + "error:" + error);
             }
     });
 }

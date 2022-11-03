@@ -42,7 +42,7 @@ public class BoardWebController {
 
     //글 보기 + 조회수 1씩 올리기
     @GetMapping("/board/{postId}")
-    public String postView(@PathVariable("postId") Long id, Model model){
+    public String postView(@PathVariable("postId") Long id, Model model) {
 
         PostDd post = webClient.get()
                 .uri("/board/{postId}", id)
@@ -58,7 +58,7 @@ public class BoardWebController {
 
     //내가 작성한 글게시글 화면이동
     @GetMapping("/board/mypost")
-    public String goMyPost(){
+    public String goMyPost() {
         return "member/myPost";
     }
 
@@ -95,7 +95,7 @@ public class BoardWebController {
 
     //나의 업로드 위치
     @GetMapping("/board/myUploadLocation")
-    public String getMyUploadLocation(Authentication auth, Model model){
+    public String getMyUploadLocation(Authentication auth, Model model) {
         Member member = (Member) auth.getPrincipal();
 
         List<Post> posts = webClient.get()
@@ -111,7 +111,7 @@ public class BoardWebController {
 
     //게시판 통계
     @GetMapping("/board/chart")
-    public String drawChart(){
+    public String drawChart() {
         return "member/boardChart";
     }
 }
